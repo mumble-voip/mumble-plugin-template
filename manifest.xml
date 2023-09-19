@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bundle version="1.0.0">
+  <assets>
+    <plugin os="windows" arch="x64">plugin.dll</plugin>
+    <plugin os="linux" arch="x64">libplugin.so</plugin>
+  </assets>
+  <name>Factorio Positional Audio</name>
+  <version>0.1.0</version>
+</bundle>
