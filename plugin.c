@@ -11,6 +11,8 @@ mumble_error_t mumble_init(mumble_plugin_id_t pluginID)
 {
 	ownID = pluginID;
 
+	srand(81731);
+
 	if (mumbleAPI.log(ownID, "Hello Mumble") != MUMBLE_STATUS_OK)
 	{
 		// Logging failed -> usually you'd probably want to log things like this in your plugin's
@@ -109,6 +111,30 @@ uint8_t mumble_initPositionalData(const char *const *programNames, const uint64_
 {
 	// Check if the supported game is in the list of programs and if yes
 	// check if the position can be obtained from the program
+
+	// log programs
+	// mumbleAPI.log(ownID, "Hello Mumble")
+	// put program count into string
+	mumbleAPI.log(ownID, "programCount");
+	char programCountString[10];
+	sprintf(programCountString, "%d", programCount);
+	mumbleAPI.log(ownID, programCountString);
+
+	mumbleAPI.log(ownID, "programNames");
+	for (size_t i = 0; i < programCount; i++)
+	{
+		mumbleAPI.log(ownID, programNames[i]);
+	}
+
+	mumbleAPI.log(ownID, "programPIDs");
+	for (size_t i = 0; i < programCount; i++)
+	{
+		char programPIDString[20];
+		sprintf(programPIDString, "%d", programPIDs[i]);
+		mumbleAPI.log(ownID, programPIDString);
+	}
+
+	mumbleAPI.log(ownID, "finished");
 
 	// If everything went well
 	return MUMBLE_PDEC_OK;
