@@ -1,2 +1,3 @@
-# mumble-plugin-template
-A template for getting started writing Mumble plugins using the standard C API.
+# Factorio Positional Audio Mumble Plugin
+
+Factorio plugin for Mumble's Positional Audio API. Requires Factorio positional audio mod.

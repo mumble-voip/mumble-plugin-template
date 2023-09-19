@@ -26,7 +26,7 @@ void mumble_shutdown() {
 }
 
 struct MumbleStringWrapper mumble_getName() {
-	static const char *name = "HelloMumble";
+	static const char *name = "Factorio";
 
 	struct MumbleStringWrapper wrapper;
 	wrapper.data = name;
@@ -59,15 +59,15 @@ void mumble_releaseResource(const void *pointer) {
 
 mumble_version_t mumble_getVersion() {
 	mumble_version_t version;
-	version.major = 1;
-	version.minor = 0;
+	version.major = 0;
+	version.minor = 1;
 	version.patch = 0;
 
 	return version;
 }
 
 struct MumbleStringWrapper mumble_getAuthor() {
-	static const char *author = "Mumble Developers";
+	static const char *author = "alifeee";
 
 	struct MumbleStringWrapper wrapper;
 	wrapper.data = author;
@@ -78,7 +78,7 @@ struct MumbleStringWrapper mumble_getAuthor() {
 }
 
 struct MumbleStringWrapper mumble_getDescription() {
-	static const char *description = "A simple plugin template that can say hello and goodbye";
+	static const char *description = "Factorio plugin for Mumble's Positional Audio API. Requires Factorio positional audio mod.";
 
 	struct MumbleStringWrapper wrapper;
 	wrapper.data = description;
