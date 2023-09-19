@@ -123,6 +123,36 @@ bool mumble_fetchPositionalData(float *avatarPos, float *avatarDir, float *avata
 	// fetch positional data and store it in the respective variables. All fields that can't be filled properly
 	// have to be set to 0 or the empty String ""
 
+	float x = ((float)rand() / (float)(RAND_MAX)) * 100.0f;
+	float y = ((float)rand() / (float)(RAND_MAX)) * 100.0f;
+
+	avatarPos[0] = x;
+	avatarPos[1] = y;
+	avatarPos[2] = 0.0f;
+
+	avatarDir[0] = 0.0f;
+	avatarDir[1] = 0.0f;
+	avatarDir[2] = 0.0f;
+
+	avatarAxis[0] = 0.0f;
+	avatarAxis[1] = 0.0f;
+	avatarAxis[2] = 0.0f;
+
+	cameraPos[0] = 0.0f;
+	cameraPos[1] = 0.0f;
+	cameraPos[2] = 0.0f;
+
+	cameraDir[0] = 0.0f;
+	cameraDir[1] = 0.0f;
+	cameraDir[2] = 0.0f;
+
+	cameraAxis[0] = 0.0f;
+	cameraAxis[1] = 0.0f;
+	cameraAxis[2] = 0.0f;
+
+	*context = "factorio";
+	*identity = "player1";
+
 	// If positional data could be fetched successfully
 	return true;
 	// otherwise return false
