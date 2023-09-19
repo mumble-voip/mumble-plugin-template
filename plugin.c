@@ -97,3 +97,39 @@ struct MumbleStringWrapper mumble_getDescription()
 
 	return wrapper;
 }
+
+// positional audio functions
+
+uint32_t mumble_getFeatures()
+{
+	return MUMBLE_FEATURE_POSITIONAL;
+}
+
+uint8_t mumble_initPositionalData(const char *const *programNames, const uint64_t *programPIDs, size_t programCount)
+{
+	// Check if the supported game is in the list of programs and if yes
+	// check if the position can be obtained from the program
+
+	// If everything went well
+	return MUMBLE_PDEC_OK;
+	// Other potential return values are:
+	// MUMBLE_PDEC_ERROR_TEMP -> The plugin can temporarily not deliver positional data
+	// MUMBLE_PDEC_PERM -> Permanenet error. The plugin will never be able to deliver positional data
+}
+
+bool mumble_fetchPositionalData(float *avatarPos, float *avatarDir, float *avatarAxis, float *cameraPos, float *cameraDir,
+								float *cameraAxis, const char **context, const char **identity)
+{
+	// fetch positional data and store it in the respective variables. All fields that can't be filled properly
+	// have to be set to 0 or the empty String ""
+
+	// If positional data could be fetched successfully
+	return true;
+	// otherwise return false
+}
+
+void mumble_shutdownPositionalData()
+{
+	// Unlink the connection to the supported game
+	// Perform potential clean-up code
+}
