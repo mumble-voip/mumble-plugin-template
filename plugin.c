@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define FACTORIO_EXE "factorio.exe"
+
 struct MumbleAPI_v_1_0_x mumbleAPI;
 mumble_plugin_id_t ownID;
 
@@ -112,32 +114,32 @@ uint8_t mumble_initPositionalData(const char *const *programNames, const uint64_
 	// Check if the supported game is in the list of programs and if yes
 	// check if the position can be obtained from the program
 
-	// log programs
-	// mumbleAPI.log(ownID, "Hello Mumble")
-	// put program count into string
-	mumbleAPI.log(ownID, "programCount");
-	char programCountString[10];
-	sprintf(programCountString, "%d", programCount);
-	mumbleAPI.log(ownID, programCountString);
+	// programNames is a list of, e.g., ["Notion.exe", "System", "firefox.exe", "factorio.exe"]
 
-	mumbleAPI.log(ownID, "programNames");
+	// loop through programs, if FACTORIO_EXE is found, return MUMBLE_PDEC_OK
+	bool found = false;
 	for (size_t i = 0; i < programCount; i++)
 	{
-		mumbleAPI.log(ownID, programNames[i]);
+		if (strcmp(programNames[i], FACTORIO_EXE) == 0)
+		{
+			found = true;
+			break;
+		}
 	}
 
-	mumbleAPI.log(ownID, "programPIDs");
-	for (size_t i = 0; i < programCount; i++)
+	if (found)
 	{
-		char programPIDString[20];
-		sprintf(programPIDString, "%d", programPIDs[i]);
-		mumbleAPI.log(ownID, programPIDString);
+		// If the game is running, check if the positional audio mod is installed
+		// and if it is, return MUMBLE_PDEC_OK
+		return MUMBLE_PDEC_OK;
 	}
 
-	mumbleAPI.log(ownID, "finished");
+	// If the game is not running, return MUMBLE_PDEC_ERROR_TEMP
+	else
+	{
+		return MUMBLE_PDEC_ERROR_TEMP;
+	}
 
-	// If everything went well
-	return MUMBLE_PDEC_OK;
 	// Other potential return values are:
 	// MUMBLE_PDEC_ERROR_TEMP -> The plugin can temporarily not deliver positional data
 	// MUMBLE_PDEC_PERM -> Permanenet error. The plugin will never be able to deliver positional data
