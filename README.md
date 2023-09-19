@@ -18,4 +18,4 @@ The main plugin is in [plugin.c](./plugin.c). For development guide, see [plugin
 
 To build it, I use [GitHub actions](https://github.com/alifeee/MumblePlugin-FactorioPositionalAudio/actions). The plugin is generated as a file `factorio.mumble_plugin` in the `bundle` artifact (deleted after 1 day).
 
-To make a release, I make a release then manually add `factorio.mumble_plugin` to the release.
+To make a release, I make a release then manually add `factorio.mumble_plugin` to the release. Version number must be changed in [plugin.c](./plugin.c), [CMakeLists.txt](./CMakeLists.txt), and [manifest.xml](./manifest.xml).
