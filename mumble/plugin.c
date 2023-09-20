@@ -1,4 +1,5 @@
 #include "MumblePlugin_v_1_0_x.h"
+#include "logfile.c"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,6 +9,8 @@
 
 struct MumbleAPI_v_1_0_x mumbleAPI;
 mumble_plugin_id_t ownID;
+
+bool factorio_mod_notified = false; // notify once to install Factorio mod
 
 mumble_error_t mumble_init(mumble_plugin_id_t pluginID)
 {
@@ -129,16 +132,26 @@ uint8_t mumble_initPositionalData(const char *const *programNames, const uint64_
 
 	if (found)
 	{
-		// If the game is running, check if the positional audio mod is installed
+		// If the game is running, check if the positional audio mod is installed (if the log file exists)
 		// and if it is, return MUMBLE_PDEC_OK
+		if (is_factorio_logfile_there())
+		{
 		return MUMBLE_PDEC_OK;
+	}
+		else
+		{
+			// If the game is running but the positional audio mod is not installed, notify the user
+			// to install the mod
+			if (!factorio_mod_notified)
+			{
+				mumbleAPI.log(ownID, "Factorio positional audio mod not installed. Please install it to use positional audio.");
+				factorio_mod_notified = true;
+			}
+		}
 	}
 
 	// If the game is not running, return MUMBLE_PDEC_ERROR_TEMP
-	else
-	{
 		return MUMBLE_PDEC_ERROR_TEMP;
-	}
 
 	// Other potential return values are:
 	// MUMBLE_PDEC_ERROR_TEMP -> The plugin can temporarily not deliver positional data
