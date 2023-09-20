@@ -3,6 +3,7 @@
 #include <string.h>
 
 #ifdef _WIN32
+#include <io.h>
 #include <windows.h>
 #include <BaseTsd.h>
 typedef SSIZE_T ssize_t;
