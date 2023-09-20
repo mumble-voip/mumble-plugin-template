@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #ifdef _WIN32
 #include <io.h>
@@ -66,6 +69,39 @@ int is_factorio_logfile_there()
     strcpy(factorioLogfile, homeDir);
     strcat(factorioLogfile, POSITION_INFO_PATH);
     return file_exists(factorioLogfile);
+}
+
+time_t get_file_modified_time(char *path)
+{
+    struct stat attr;
+    stat(path, &attr);
+    return attr.st_mtime;
+}
+
+time_t get_factorio_file_modified_time()
+{
+    char *homeDir = get_home_dir();
+    char *factorioLogfile = malloc(strlen(homeDir) + strlen(POSITION_INFO_PATH) + 1);
+    strcpy(factorioLogfile, homeDir);
+    strcat(factorioLogfile, POSITION_INFO_PATH);
+    return get_file_modified_time(factorioLogfile);
+}
+
+int is_factorio_logfile_recent(int seconds)
+{
+    // default argument
+    if (seconds == 0)
+    {
+        seconds = 2;
+    }
+    time_t modified_time = get_factorio_file_modified_time();
+    time_t now = time(NULL);
+    time_t diff = now - modified_time;
+    if (diff > seconds)
+    {
+        return 0;
+    }
+    return 1;
 }
 
 /**
@@ -189,6 +225,30 @@ int main(int argc, char **argv)
     char *context = context_str;
 
     printf("context: %s\n", context_str);
+
+    // get_file_modified_time
+    time_t modified_time = get_factorio_file_modified_time();
+    printf("modified time: %ld\n", modified_time);
+    // compare to time now
+    time_t now = time(NULL);
+    printf("now: %ld\n", now);
+    // difference
+    time_t diff = now - modified_time;
+    printf("diff: %ld\n", diff);
+    if (diff > 20)
+    {
+        printf("More than 20 seconds ago!\n");
+    }
+
+    // is recent?
+    if (is_factorio_logfile_recent(2))
+    {
+        printf("Factorio logfile is recent\n");
+    }
+    else
+    {
+        printf("Factorio logfile is not recent.\n");
+    }
 
     return 0;
 }
