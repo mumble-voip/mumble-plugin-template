@@ -90,7 +90,8 @@ jobs:
         run: |
           mv build/libfactorio_linux_x86_64.so libplugin.so
           mv build/Release/plugin.dll plugin.dll
-          zip factorio.mumble_plugin manifest.xml libplugin.so plugin.dll
+          mv mumble/manifest.xml manifest.xml
+          zip -MM factorio.mumble_plugin manifest.xml libplugin.so plugin.dll
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.3
