@@ -4,6 +4,8 @@
 
 #ifdef _WIN32
 #include <windows.h>
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
 #else // linux / macos
 #include <unistd.h>
 #include <pwd.h>
