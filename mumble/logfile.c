@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
 
 #ifdef _WIN32
 #include <windows.h>
-#else
+#else // linux / macos
+#include <unistd.h>
 #include <pwd.h>
 #endif
 
