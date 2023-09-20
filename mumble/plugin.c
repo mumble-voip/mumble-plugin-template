@@ -130,28 +130,32 @@ uint8_t mumble_initPositionalData(const char *const *programNames, const uint64_
 		}
 	}
 
-	if (found)
+	if (!found)
 	{
-		// If the game is running, check if the positional audio mod is installed (if the log file exists)
-		// and if it is, return MUMBLE_PDEC_OK
-		if (is_factorio_logfile_there())
-		{
-			return MUMBLE_PDEC_OK;
-		}
-		else
-		{
-			// If the game is running but the positional audio mod is not installed, notify the user
-			// to install the mod
-			if (!factorio_mod_notified)
-			{
-				mumbleAPI.log(ownID, "Factorio positional audio mod not installed. Please install it to use positional audio.");
-				factorio_mod_notified = true;
-			}
-		}
+		// If the game is not running, return MUMBLE_PDEC_ERROR_TEMP
+		return MUMBLE_PDEC_ERROR_TEMP;
 	}
 
-	// If the game is not running, return MUMBLE_PDEC_ERROR_TEMP
-	return MUMBLE_PDEC_ERROR_TEMP;
+	// If the game is running, check if the positional audio mod is installed (if the log file exists)
+	// and if it is, return MUMBLE_PDEC_OK
+	if (!is_factorio_logfile_there())
+	{
+		// If the game is running but the positional audio mod is not installed, notify the user
+		// to install the mod
+		if (!factorio_mod_notified)
+		{
+			mumbleAPI.log(ownID, "Factorio positional audio mod not installed. Please install it to use positional audio.");
+			factorio_mod_notified = true;
+		}
+		return MUMBLE_PDEC_ERROR_TEMP;
+	}
+
+	if (!is_factorio_logfile_recent(2)) // 2 seconds
+	{
+		return MUMBLE_PDEC_ERROR_TEMP;
+	}
+
+	return MUMBLE_PDEC_OK;
 
 	// Other potential return values are:
 	// MUMBLE_PDEC_ERROR_TEMP -> The plugin can temporarily not deliver positional data
@@ -166,6 +170,12 @@ bool mumble_fetchPositionalData(float *avatarPos, float *avatarDir, float *avata
 
 	// if log file does not exist, OH NO!
 	if (!is_factorio_logfile_there())
+	{
+		return false;
+	}
+
+	// if log file is old (last modified > N seconds ago), data is bad
+	if (!is_factorio_logfile_recent(2)) // 2 seconds
 	{
 		return false;
 	}
