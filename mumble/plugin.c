@@ -136,8 +136,8 @@ uint8_t mumble_initPositionalData(const char *const *programNames, const uint64_
 		// and if it is, return MUMBLE_PDEC_OK
 		if (is_factorio_logfile_there())
 		{
-		return MUMBLE_PDEC_OK;
-	}
+			return MUMBLE_PDEC_OK;
+		}
 		else
 		{
 			// If the game is running but the positional audio mod is not installed, notify the user
@@ -151,7 +151,7 @@ uint8_t mumble_initPositionalData(const char *const *programNames, const uint64_
 	}
 
 	// If the game is not running, return MUMBLE_PDEC_ERROR_TEMP
-		return MUMBLE_PDEC_ERROR_TEMP;
+	return MUMBLE_PDEC_ERROR_TEMP;
 
 	// Other potential return values are:
 	// MUMBLE_PDEC_ERROR_TEMP -> The plugin can temporarily not deliver positional data
@@ -164,12 +164,23 @@ bool mumble_fetchPositionalData(float *avatarPos, float *avatarDir, float *avata
 	// fetch positional data and store it in the respective variables. All fields that can't be filled properly
 	// have to be set to 0 or the empty String ""
 
-	float x = ((float)rand() / (float)(RAND_MAX)) * 100.0f;
-	float y = ((float)rand() / (float)(RAND_MAX)) * 100.0f;
+	// if log file does not exist, OH NO!
+	if (!is_factorio_logfile_there())
+	{
+		return false;
+	}
+
+	// if log file exists, parse it
+	float x, y, z;
+	int player, surface;
+	char *server;
+	size_t server_len;
+
+	parse_factorio_logfile(&x, &y, &z, &player, &surface, &server, &server_len);
 
 	avatarPos[0] = x;
 	avatarPos[1] = y;
-	avatarPos[2] = 0.0f;
+	avatarPos[2] = z;
 
 	avatarDir[0] = 0.0f;
 	avatarDir[1] = 0.0f;
@@ -191,8 +202,19 @@ bool mumble_fetchPositionalData(float *avatarPos, float *avatarDir, float *avata
 	cameraAxis[1] = 0.0f;
 	cameraAxis[2] = 0.0f;
 
-	*context = "factorio";
-	*identity = "player1";
+	// context: combine server + surface
+	char *context_str = malloc(server_len + 1 + 1 + 1);
+	strcpy(context_str, server);
+	strcat(context_str, "/");
+	char surface_str[12];
+	sprintf(surface_str, "%d", surface);
+	strcat(context_str, surface_str);
+	*context = context_str;
+
+	// identity: player
+	char player_str[12];
+	sprintf(player_str, "%d", player);
+	*identity = player_str;
 
 	// If positional data could be fetched successfully
 	return true;
